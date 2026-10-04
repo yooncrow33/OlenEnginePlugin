@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="defaultPlugin">
+    <output-path>$PROJECT_DIR$/out/artifacts/defaultPlugin</output-path>
+    <root id="archive" name="defaultPlugin.jar">
+      <element id="module-output" name="FWPlugins" />
+    </root>
+  </artifact>
+</component>

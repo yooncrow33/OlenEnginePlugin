@@ -1,0 +1,93 @@
+<idea-plugin>
+    <id>com.fw.idea.plugins.olen</id>
+    <name>Olen Engine Support</name>
+    <version>0.2.1</version>
+    <vendor email="support@olenengine.com" url="https://github.com/olen-engine">OlenEngine</vendor>
+
+    <!-- 대상 빌드 버전 지정 (IC-252.26199.169 호환) -->
+    <idea-version since-build="252.26199.169" until-build="252.*"/>
+
+    <description><![CDATA[
+      <h3>English</h3>
+      <p>Dedicated IntelliJ IDEA tooling support for the Olen 2D Game Engine.</p>
+      <h4>Features</h4>
+      <ul>
+        <li><strong>Key Indexing:</strong> Indexes asset keys (Texture, Sound, Music, Sprite, Event, Fw) across the project.</li>
+        <li><strong>Smart Auto-Completion:</strong> Prioritizes valid asset and engine keys within String literals.</li>
+        <li><strong>Reference & Navigation:</strong> Resolves key usage sites to registration points via Go to Declaration (Ctrl+Click / Cmd+Click).</li>
+        <li><strong>Static Analysis (Annotator):</strong> Warns about undefined or unregistered asset keys directly in the editor.</li>
+        <li><strong>Rename Refactoring:</strong> Safely renames asset keys and their usages simultaneously (Shift + F6), bypassing standard Java identifier limitations.</li>
+      </ul>
+
+      <hr/>
+
+      <h3>한국어</h3>
+      <p>Olen 2D 게임 엔진 개발을 위한 IntelliJ IDEA 전용 지원 플러그인입니다.</p>
+      <h4>주요 기능</h4>
+      <ul>
+        <li><strong>키 인덱싱:</strong> 프로젝트 전반의 에셋 키(Texture, Sound, Music, Sprite, Event, Fw)를 백그라운드 색인합니다.</li>
+        <li><strong>스마트 자동완성:</strong> 리터럴 내부에서 유효한 엔진 에셋 및 이벤트 키를 최우선 순위로 제안합니다.</li>
+        <li><strong>참조 및 선언 이동:</strong> 사용처에서 정의부로 점프(Ctrl+클릭 / Cmd+클릭)할 수 있도록 PSI 참조를 연결합니다.</li>
+        <li><strong>정적 검사 (Annotator):</strong> 등록되지 않거나 오타가 난 키를 감지하여 에디터에 에러를 표시합니다.</li>
+        <li><strong>안전한 이름 변경 (Rename):</strong> 특수문자가 포함된 리소스 키 경로도 Java 식별자 제약 없이 일괄 리팩토링(Shift + F6)할 수 있습니다.</li>
+      </ul>
+
+      <hr/>
+
+      <h3>Suomi</h3>
+      <p>Olen 2D -pelimoottorille omistettu kehitystyökalujen tuki IntelliJ IDEAan.</p>
+      <h4>Keskeiset ominaisuudet</h4>
+      <ul>
+        <li><strong>Avainten indeksointi:</strong> Indeksoi projektin laajuisesti resurssiavaimet (Texture, Sound, Music, Sprite, Event, Fw) taustalla.</li>
+        <li><strong>Älykäs automaattitäydennys:</strong> Ehdottaa kelvollisia moottorin resurssi- ja tapahtuma-avaimia ensisijaisina merkkijonoliteraaleissa.</li>
+        <li><strong>Viittaukset ja siirtyminen:</strong> Yhdistää avaimen käyttöpaikat määrittelykohtiin Go to Declaration -toiminnon kautta (Ctrl+Click / Cmd+Click).</li>
+        <li><strong>Staattinen analyysi (Annotator):</strong> Havaitsee ja varoittaa määrittelemättömistä tai virheellisistä avaimista suoraan editorissa.</li>
+        <li><strong>Turvallinen uudelleennimeäminen:</strong> Mahdollistaa resurssiavainten ja niiden viittausten turvallisen refaktoroinnin (Shift + F6) myös erikoismerkkejä sisältävillä poluilla ilman Javan tunnisterajoituksia.</li>
+      </ul>
+    ]]></description>
+
+    <change-notes><![CDATA[
+      <h3>0.2.1</h3>
+      <ul>
+        <li>Initial release for Olen Engine PRE 0.2.1.</li>
+        <li>Added FileBasedIndex for engine resource keys.</li>
+        <li>Added custom RenamePsiElementProcessor supporting special characters in asset paths.</li>
+        <li>Enhanced Fw qualifier resolution to eliminate false positives in collection methods (add/get).</li>
+        <li>Tested on IntelliJ IDEA 2025.2 (Build #IC-252.26199.169).</li>
+      </ul>
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 1. 파일 색인 -->
+        <fileBasedIndex implementation="com.fw.idea.plugins.OlenEngineSupport$KeyIndex"/>
+
+        <!-- 2. 자동완성 추천 -->
+        <completion.contributor
+                language="JAVA"
+                implementationClass="com.fw.idea.plugins.OlenEngineSupport$Contributor"
+                order="first"/>
+
+        <!-- 3. 따옴표 안 인라인 자동 팝업 유지 -->
+        <completion.confidence
+                language="JAVA"
+                implementationClass="com.fw.idea.plugins.OlenEngineSupport$Confidence"
+                order="first"/>
+
+        <!-- 4. 참조 이동 (Ctrl + Click) -->
+        <psi.referenceContributor
+                language="JAVA"
+                implementation="com.fw.idea.plugins.OlenEngineSupport$ReferenceContributor"/>
+
+        <!-- 5. 미등록 키 유효성 검사 -->
+        <annotator
+                language="JAVA"
+                implementationClass="com.fw.idea.plugins.OlenEngineSupport$KeyAnnotator"/>
+
+        <!-- 6. 리네임 리팩토링 (Shift + F6) -->
+        <renamePsiElementProcessor
+                implementation="com.fw.idea.plugins.OlenEngineSupport$KeyRenameProcessor"/>
+    </extensions>
+</idea-plugin>
