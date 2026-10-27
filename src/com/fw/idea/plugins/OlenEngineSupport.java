@@ -60,7 +60,9 @@ public final class OlenEngineSupport {
         MUSIC("Olen Music"),
         SPRITE("Olen Sprite"),
         FW("Olen Base"),
-        EVENT("Olen Event");
+        EVENT("Olen Event"),
+        ATLAS("Olen Atlas"),
+        SCENE("Olen Scene");
 
         public final String label;
         KeyCategory(String label) { this.label = label; }
@@ -99,11 +101,18 @@ public final class OlenEngineSupport {
 
         return switch (methodName) {
             case "registerBootTexture" -> (index == 0) ? KeyCategory.TEXTURE : null;
+            case "registerDirectTexture" -> (index == 0) ? KeyCategory.TEXTURE : null;
             case "registerBootSound" -> (index == 0) ? KeyCategory.SOUND : null;
             case "registerBootMusic" -> (index == 0) ? KeyCategory.MUSIC : null;
             case "setStringKey" -> (index == 0) ? KeyCategory.FW : null;
             case "add" -> (index == 0 && isFwQualifier(call)) ? KeyCategory.FW : null;
-            case "registerSprite" -> (index == 1) ? KeyCategory.SPRITE : null;
+            case "registerSprite" -> {
+                if (index == 1 && args.length == 2) yield KeyCategory.SPRITE;
+                if (index == 3 && args.length == 4) yield KeyCategory.SPRITE;
+                yield null;
+            }
+            case "createAtlas", "registerPersistentAtlas" -> (index == 0) ? KeyCategory.ATLAS : null;
+            case "registerScene" -> (index == 0) ? KeyCategory.SCENE : null;
             case "loadTexture" -> {
                 if (index == 1) yield KeyCategory.TEXTURE;
                 if (index == 3) yield KeyCategory.EVENT;
@@ -145,16 +154,18 @@ public final class OlenEngineSupport {
             case "getTexture" -> (index == 0) ? KeyCategory.TEXTURE : null;
             case "getSound" -> (index == 0) ? KeyCategory.SOUND : null;
             case "getMusic" -> (index == 0) ? KeyCategory.MUSIC : null;
-            case "getUV" -> (index == 0) ? KeyCategory.SPRITE : null;
-            case "event" -> (index == 0) ? KeyCategory.EVENT : null;
+            case "getUV", "getSprite" -> (index == 0) ? KeyCategory.SPRITE : null;
+            case "getAtlas" -> (index == 0) ? KeyCategory.ATLAS : null;
+            case "changeScene", "setInitScene", "getRegisteredScene" -> (index == 0) ? KeyCategory.SCENE : null;
+            case "event", "eventAndAwait", "bindLazyEvent" -> (index == 0) ? KeyCategory.EVENT : null;
             case "get" -> (index == 0 && isFwQualifier(call)) ? KeyCategory.FW : null;
             case "free" -> {
-                // Evaluates free(TYPE, "key") calls
                 if (index == 1 && args.length >= 2) {
                     String typeArg = args[0].getText();
                     if (typeArg.contains("TEXTURE")) yield KeyCategory.TEXTURE;
                     if (typeArg.contains("MUSIC")) yield KeyCategory.MUSIC;
                     if (typeArg.contains("SOUND")) yield KeyCategory.SOUND;
+                    if (typeArg.contains("ATLAS")) yield KeyCategory.ATLAS;
                 }
                 yield null;
             }
@@ -280,7 +291,7 @@ public final class OlenEngineSupport {
         public KeyDescriptor<String> getKeyDescriptor() { return EnumeratorStringDescriptor.INSTANCE; }
 
         @Override
-        public int getVersion() { return 11; }
+        public int getVersion() { return 12; }
 
         @NotNull
         @Override
