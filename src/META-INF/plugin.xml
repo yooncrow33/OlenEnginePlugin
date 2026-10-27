@@ -5,7 +5,7 @@
     <vendor email="support@olenengine.com" url="https://github.com/olen-engine">OlenEngine</vendor>
 
     <!-- 대상 빌드 버전 지정 (IC-252.26199.169 호환) -->
-    <idea-version since-build="252.26199.169" until-build="252.*"/>
+    <!-- <<idea-version since-build="252.26199.169" until-build="252.*"/> -->
 
     <description><![CDATA[
       <h3>English</h3>
@@ -47,14 +47,21 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      <h3>0.2.1</h3>
-      <ul>
-        <li>Initial release for Olen Engine PRE 0.2.1.</li>
-        <li>Added FileBasedIndex for engine resource keys.</li>
-        <li>Added custom RenamePsiElementProcessor supporting special characters in asset paths.</li>
-        <li>Enhanced Fw qualifier resolution to eliminate false positives in collection methods (add/get).</li>
-        <li>Tested on IntelliJ IDEA 2025.2 (Build #IC-252.26199.169).</li>
-      </ul>
+        <h3>0.2.2</h3>
+          <ul>
+            <li>Fixed key completion and error inspection to strictly isolate Sound and Music categories.</li>
+            <li>Fixed syntax error in CompletionConfidence autopopup offset check.</li>
+            <li>Bumped KeyIndex version to 11 to invalidate stale index caches.</li>
+            <li>Refactored and translated all internal code comments and Javadoc to English.</li>
+          </ul>
+          <h3>0.2.1</h3>
+          <ul>
+            <li>Initial release for Olen Engine PRE 0.2.1.</li>
+            <li>Added FileBasedIndex for engine resource keys.</li>
+            <li>Added custom RenamePsiElementProcessor supporting special characters in asset paths.</li>
+            <li>Enhanced Fw qualifier resolution to eliminate false positives in collection methods (add/get).</li>
+            <li>Tested on IntelliJ IDEA 2025.2 (Build #IC-252.26199.169).</li>
+          </ul>
     ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>
